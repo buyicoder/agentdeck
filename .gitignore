@@ -2,4 +2,5 @@
 .hammerspoon.local.lua
 runtime/
 *.log
+.build/
 

@@ -1,75 +1,97 @@
 # AgentDeck
 
-AgentDeck is a local-first macOS window dispatcher for people who run many AI
-agents at once: Codex, WorkBuddy, Cursor, Claude Code, browser agents, and other
-assistant windows.
+AgentDeck is a local macOS control panel for AI conversations.
 
-Its job is simple:
+It tracks conversations across apps, windows, and tabs, then helps the user
+review completed agent work without hunting through windows.
 
-- keep your active editing side stable;
-- send completed or newly surfaced agent windows to the opposite half of the
-  main display;
-- queue completed agents without asking for confirmation;
-- promote the next queued window whenever a main-display slot becomes free.
-
-## Core Idea
-
-The main display is treated as a two-slot workbench.
+The core object is:
 
 ```text
-Left slot                          Right slot
-active editing side                review / next-agent side
+conversation = app + window + active conversation identity
 ```
 
-When the left slot is active, AgentDeck presents the next agent window on the
-right. When the right slot is active, it presents the next agent window on the
-left.
+This means AgentDeck must distinguish:
 
-Completed agents do not interrupt your flow. They enter a FIFO review queue and
-wait until a slot opens.
+- different apps, such as Codex, Cursor, WorkBuddy, Chrome, Terminal;
+- different windows inside the same app;
+- different conversations inside the same window.
 
-## State Machine
+## Product Goal
+
+AgentDeck should make a multi-agent Mac setup feel like a dispatch desk:
+
+- all important AI conversations are visible in one local panel;
+- running conversations stay out of the way;
+- finished conversations enter a review queue;
+- the next conversation appears when the main display has room;
+- the active editing side is protected.
+
+## Current Status
+
+Status: native app skeleton with real window facts, detector pipeline,
+conversation scheduler, guarded window actions, and validation mode.
+
+Completed:
+
+- conversation-level product design;
+- mature window-manager lessons;
+- static local panel prototype;
+- architecture split;
+- development workflow and task board.
+- Swift native panel skeleton;
+- real visible-window scan;
+- focused-window approximation;
+- detector pipeline with title-based detectors;
+- scheduler decision module.
+- guarded macOS Accessibility move/restore path behind `Move windows`;
+- safe test window and one-click validation mode.
+
+Next:
+
+- browser URL/tab detector;
+- manual multi-display validation;
+- local packaging;
+- user full-journey frontend audit.
+
+## Local Prototype
+
+Open:
 
 ```text
-Running
-  -> Queued       agent finishes and needs review
-  -> Displayed    a screen slot is available
-  -> Running      you send it back to work
-  -> Done         you close, archive, or dismiss it
+prototype/index.html
 ```
 
-## First MVP
+The prototype simulates:
 
-The first version is a Hammerspoon-based prototype:
+- app/window/conversation separation;
+- multiple conversations in the same window;
+- switching the active conversation inside a window;
+- queue, run, done, and promote flows;
+- main display left/right slot behavior.
 
-- detect agent windows by application name and title;
-- track which half of the main screen currently has focus;
-- move a queued agent window to the opposite half;
-- use hotkeys to mark windows as running, queued, displayed, or done;
-- keep the scheduling logic in one local Lua file.
+## Documentation
 
-This avoids building a full native macOS app before the interaction model is
-proven.
-
-## Setup
-
-1. Install Hammerspoon from <https://www.hammerspoon.org/>.
-2. Give Hammerspoon Accessibility permission in macOS Settings.
-3. Copy `hammerspoon/init.lua` into `~/.hammerspoon/init.lua`.
-4. Reload Hammerspoon.
-
-## MVP Hotkeys
-
-| Hotkey | Action |
+| File | Purpose |
 | --- | --- |
-| `ctrl + alt + cmd + q` | Queue focused agent window |
-| `ctrl + alt + cmd + r` | Mark focused window as running and free its slot |
-| `ctrl + alt + cmd + d` | Mark focused window as done |
-| `ctrl + alt + cmd + n` | Promote next queued window |
-| `ctrl + alt + cmd + s` | Show AgentDeck status |
+| `docs/product-design.md` | Product definition and interaction model. |
+| `docs/competitive-lessons.md` | Lessons from mature macOS window tools. |
+| `docs/architecture.md` | System layers and module boundaries. |
+| `docs/development-workflow.md` | Workstream split and collaboration rules. |
+| `docs/task-board.md` | Milestones and implementation tasks. |
+| `docs/platform-window-actions.md` | Real macOS move/focus/restore plan. |
+| `docs/user-journey-frontend-audit.md` | Required full journey frontend audit before alpha. |
+| `docs/audit-evidence.md` | Validation and audit evidence procedure. |
+| `docs/flow.md` | Original queue flow sketch. |
+| `docs/mvp.md` | Original MVP notes. |
 
-## Project Docs
+## Development Workstreams
 
-- `docs/flow.md` describes the full workflow.
-- `docs/mvp.md` describes the first build target.
+- Product / UX
+- Platform / macOS
+- Conversation Detection
+- Scheduler
+- App Shell / Panel
+- QA / Packaging
 
+See `docs/development-workflow.md` for ownership and merge order.
