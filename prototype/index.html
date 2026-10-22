@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AgentDeck Local Panel Prototype</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">AD</div>
+          <div>
+            <h1>AgentDeck</h1>
+            <p>Local Mac panel for AI conversations</p>
+          </div>
+        </div>
+        <div class="system-strip" aria-label="Local app status">
+          <span class="status-dot"></span>
+          <span>Accessibility connected</span>
+          <span>Primary display: Built-in + 2 external</span>
+          <span id="tracked-count">6 tracked conversations</span>
+        </div>
+        <div class="topbar-actions">
+          <button id="refresh-windows" type="button">Refresh</button>
+          <button id="promote-next" type="button">Promote next</button>
+          <button id="reset-demo" type="button">Reset</button>
+        </div>
+      </header>
+
+      <section class="content-grid">
+        <section class="window-panel">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">Conversation Overview</span>
+              <h2>Current AI Conversations</h2>
+            </div>
+            <div class="segmented" role="group" aria-label="Active side">
+              <button id="set-left" class="segment active" type="button">Left editing</button>
+              <button id="set-right" class="segment" type="button">Right editing</button>
+            </div>
+          </div>
+
+          <div class="window-table-wrap">
+            <table class="window-table">
+              <thead>
+                <tr>
+                  <th>App</th>
+                  <th>Window</th>
+                  <th>Conversation</th>
+                  <th>Status</th>
+                  <th>Location</th>
+                  <th>Age</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="window-rows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <aside class="right-rail">
+          <section class="panel">
+            <div class="section-heading compact">
+              <div>
+                <span class="eyebrow">Main Display</span>
+                <h2>Slots</h2>
+              </div>
+            </div>
+            <div class="screen-map" aria-label="Primary display slots">
+              <article id="left-slot" class="slot active-side">
+                <div class="slot-header">
+                  <span>Left</span>
+                  <strong id="left-slot-state">Editing</strong>
+                </div>
+                <div id="left-slot-body" class="slot-body"></div>
+              </article>
+              <article id="right-slot" class="slot">
+                <div class="slot-header">
+                  <span>Right</span>
+                  <strong id="right-slot-state">Open</strong>
+                </div>
+                <div id="right-slot-body" class="slot-body"></div>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel queue-panel">
+            <div class="section-heading compact">
+              <div>
+                <span class="eyebrow">Review Queue</span>
+                <h2 id="queue-count">0 queued</h2>
+              </div>
+            </div>
+            <ol id="queue-list" class="queue-list"></ol>
+          </section>
+        </aside>
+      </section>
+
+      <section class="bottom-grid">
+        <section class="panel simulate-panel">
+          <div class="section-heading compact">
+            <div>
+              <span class="eyebrow">Simulation</span>
+              <h2>Conversation Events</h2>
+            </div>
+          </div>
+          <div class="agent-buttons">
+            <button data-agent="Codex" type="button">Codex conversation finished</button>
+            <button data-agent="WorkBuddy" type="button">WorkBuddy conversation finished</button>
+            <button data-agent="Cursor" type="button">Cursor conversation finished</button>
+            <button id="switch-conversation" type="button">Switch active conversation</button>
+          </div>
+        </section>
+
+        <section class="panel event-panel">
+          <div class="timeline-header">
+            <div>
+              <span class="eyebrow">Event Log</span>
+              <h2>Scheduling Decisions</h2>
+            </div>
+            <span id="active-side-label">Active side: left</span>
+          </div>
+          <ul id="event-log" class="event-log"></ul>
+        </section>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
